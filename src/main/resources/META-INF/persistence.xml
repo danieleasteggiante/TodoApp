@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+
+    <persistence-unit name="todo_persistence" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:/jdbc/postgres</jta-data-source>
+        <jar-file>../classes</jar-file>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <!-- Configurazione della sorgente dati JDBC per PostgreSQL -->
+        <properties>
+
+            <!-- Configurazione specifica di Hibernate -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.archive.autodetection" value="class, hbm"/>
+            <!-- Altre configurazioni specifiche di Hibernate -->
+        </properties>
+    </persistence-unit>
+</persistence>
