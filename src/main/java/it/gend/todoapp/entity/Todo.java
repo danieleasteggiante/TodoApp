@@ -12,12 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
 /**
  * @author Daniele Asteggiante
  */
@@ -112,4 +108,18 @@ public class Todo {
     public void setChildren(List<Todo> children) {
         this.children = children;
     }
+
+    @Override
+    public String toString() {
+        return "Todo{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", completed=" + completed +
+                ", userId=" + userId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+
+
 }

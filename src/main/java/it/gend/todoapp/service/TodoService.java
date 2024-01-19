@@ -1,12 +1,18 @@
 package it.gend.todoapp.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gend.todoapp.entity.Todo;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Daniele Asteggiante
@@ -15,16 +21,60 @@ import java.util.List;
 public class TodoService {
     @Inject
     EntityManager em;
+    @Inject
+    Logger logger;
 
     public Todo getTodoByIdService(Integer id) {
         em.clear();
         return em.find(Todo.class, id);
     }
-    public Todo createTodoService(Todo todo) {
-        em.persist(todo);
+    public List<Todo> createTodoService(String todo) {
+        Todo rootTodo = null;
+        try {
+            rootTodo = new ObjectMapper().readValue(todo, Todo.class);
+        }
+        catch (Exception e) {
+            logger.info(e.getMessage());
+        }
+
+        assert rootTodo != null;
+
+        Set<Todo> todoSet = getListFromTree(rootTodo);
+        todoSet.add(rootTodo);
+        List<Todo> ordered = new ArrayList<>(todoSet);
+        ordered = ordered.stream()
+                .peek(todo1 -> todo1.setChildren(null))
+                .sorted(Comparator.comparing(Todo::getId))
+                .collect(Collectors.toList());
         em.flush();
-        return em.find(Todo.class, todo.getId());
+        return ordered;
     }
+
+    private Set<Todo> getListFromTree(Todo rootTodo) {
+        Set<Todo> todoSet = new HashSet<>();
+        if(rootTodo.getParentId() != null)
+            rootTodo.setParentId(em.find(Todo.class, rootTodo.getParentId().getId()));
+        else
+            decodeTree(rootTodo, todoSet,null);
+        return todoSet;
+    }
+
+    private void decodeTree(Todo rootTodo, Set<Todo> todoSet, Todo parent) {
+        if(parent != null){
+            todoSet.add(rootTodo);
+            em.merge(parent);
+        }
+        if(rootTodo.getChildren().isEmpty()){
+            rootTodo.setChildren(null);
+            rootTodo.setParentId(parent);
+            return;
+        }
+        rootTodo.getChildren().forEach(todo -> {
+            todoSet.add(todo);
+            decodeTree(todo, todoSet, todo.getParentId());
+        });
+    }
+
     public List<Todo> getChildren(Integer id) {
         em.clear();
         return em.find(Todo.class, id).getChildren();

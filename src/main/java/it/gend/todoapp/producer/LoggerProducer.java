@@ -6,6 +6,7 @@ import jakarta.enterprise.inject.spi.InjectionPoint;
 
 import java.util.logging.Logger;
 
+
 /**
  * @author Daniele Asteggiante
  */

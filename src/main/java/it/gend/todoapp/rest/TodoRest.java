@@ -43,7 +43,7 @@ public class TodoRest {
         return Response.ok(todoService.getChildren(id)).build();
     }
     @POST
-    public Response createTodo(Todo todo) {
+    public Response createTodo(String todo) {
         logger.info("Create new todo...");
         return Response.ok(todoService.createTodoService(todo)).build();
     }
