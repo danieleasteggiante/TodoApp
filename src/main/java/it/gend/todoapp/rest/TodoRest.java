@@ -1,17 +1,12 @@
 package it.gend.todoapp.rest;
-
 /**
  * @author Daniele Asteggiante
  */
-import it.gend.todoapp.entity.Todo;
-import it.gend.todoapp.entity.User;
 import it.gend.todoapp.service.TodoService;
 import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceUnit;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -29,7 +24,6 @@ public class TodoRest {
     Logger logger;
     @EJB
     TodoService todoService;
-
     @GET
     @Path("{id}")
     public Response getTodoById(@PathParam("id") Integer id) {
@@ -46,5 +40,11 @@ public class TodoRest {
     public Response createTodo(String todo) {
         logger.info("Create new todo...");
         return Response.ok(todoService.createTodoService(todo)).build();
+    }
+    @DELETE()
+    @Path("{id}")
+    public Response deleteTodo(@PathParam("id") Integer id) {
+        logger.info("Delete todo...");
+        return Response.ok(todoService.deleteTodoService(id)).build();
     }
 }

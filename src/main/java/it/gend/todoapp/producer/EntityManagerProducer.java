@@ -12,6 +12,8 @@ import jakarta.persistence.Persistence;
 public class EntityManagerProducer {
     @Produces
     public EntityManager produceEntityManager() {
-        return Persistence.createEntityManagerFactory("todo_persistence").createEntityManager();
+        return Persistence
+                .createEntityManagerFactory("todo_persistence")
+                .createEntityManager();
     }
 }

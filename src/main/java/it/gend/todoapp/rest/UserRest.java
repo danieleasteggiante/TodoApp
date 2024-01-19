@@ -1,11 +1,11 @@
 package it.gend.todoapp.rest;
 
 import it.gend.todoapp.entity.User;
-import it.gend.todoapp.service.TodoService;
 import it.gend.todoapp.service.UserService;
 import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -14,7 +14,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
 import java.util.logging.Logger;
-
 /**
  * @author Daniele Asteggiante
  */
@@ -26,7 +25,6 @@ public class UserRest {
     UserService userService;
     @Inject
     Logger logger;
-
     @GET
     @Path("{id}")
     public Response getUserById(@PathParam("id") Integer id) {
@@ -37,5 +35,11 @@ public class UserRest {
     public Response createUser(User user) {
         logger.info("Create User: " + user );
         return Response.ok(userService.createUserService(user)).build();
+    }
+    @DELETE
+    @Path("{id}")
+    public Response deleteUser(@PathParam("id") Integer id) {
+        logger.info("Delete User by id: " + id );
+        return Response.ok(userService.deleteUserService(id)).build();
     }
 }

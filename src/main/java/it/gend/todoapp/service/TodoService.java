@@ -79,4 +79,21 @@ public class TodoService {
         em.clear();
         return em.find(Todo.class, id).getChildren();
     }
+
+    public Boolean deleteTodoService(Integer id) {
+        Todo todo = em.find(Todo.class, id);
+        todo.setParentId(null);
+        em.merge(todo);
+        em.flush();
+        em.clear();
+        todo = em.find(Todo.class, id);
+        try {
+            em.remove(todo);
+            return true;
+        }
+        catch (Exception e) {
+            logger.info(e.getMessage());
+            return false;
+        }
+    }
 }

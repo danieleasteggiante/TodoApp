@@ -34,7 +34,7 @@ public class Todo {
     private Date createdAt;
     @Column(name = "updated_at")
     private Date updatedAt;
-    @ManyToOne(cascade= CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name= "parent_id", referencedColumnName = "id")
     @JsonBackReference
     private Todo parentId;
