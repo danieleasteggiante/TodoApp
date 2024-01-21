@@ -45,36 +45,27 @@ public class TodoService {
         ordered = ordered.stream()
                 .peek(todo1 -> todo1.setChildren(null))
                 .sorted(Comparator.comparing(Todo::getId))
+                .peek(todo1 -> em.merge(todo1))
                 .collect(Collectors.toList());
         em.flush();
+        em.clear();
         return ordered;
     }
 
     private Set<Todo> getListFromTree(Todo rootTodo) {
         Set<Todo> todoSet = new HashSet<>();
-        if(rootTodo.getParentId() != null){
-
-         rootTodo.setParentId(em.find(Todo.class, rootTodo.getParentId().getId()));
-decodeTree(rootTodo, todoSet, rootTodo.getParentId());
-}
-   
-        else
-            decodeTree(rootTodo, todoSet,null);
+        decodeTree(rootTodo, todoSet);
         return todoSet;
     }
 
-    private void decodeTree(Todo rootTodo, Set<Todo> todoSet, Todo parent) {
-        if(parent != null){
-            todoSet.add(rootTodo);
-            em.merge(parent);
-        }
+    private void decodeTree(Todo rootTodo, Set<Todo> todoSet) {
+        todoSet.add(rootTodo);
         if(rootTodo.getChildren().isEmpty()){
             rootTodo.setChildren(null);
             return;
         }
         rootTodo.getChildren().forEach(todo -> {
-            todoSet.add(todo);
-            decodeTree(todo, todoSet, todo.getParentId());
+            decodeTree(todo, todoSet);
         });
     }
 
@@ -85,7 +76,8 @@ decodeTree(rootTodo, todoSet, rootTodo.getParentId());
 
     public Boolean deleteTodoService(Integer id) {
         Todo todo = em.find(Todo.class, id);
-        todo.setParentId(null);
+        if(todo.getParentId() != null)
+            todo.setParentId(null);
         em.merge(todo);
         em.flush();
         em.clear();
