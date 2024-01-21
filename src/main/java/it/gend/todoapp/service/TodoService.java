@@ -52,8 +52,12 @@ public class TodoService {
 
     private Set<Todo> getListFromTree(Todo rootTodo) {
         Set<Todo> todoSet = new HashSet<>();
-        if(rootTodo.getParentId() != null)
-            rootTodo.setParentId(em.find(Todo.class, rootTodo.getParentId().getId()));
+        if(rootTodo.getParentId() != null){
+
+         rootTodo.setParentId(em.find(Todo.class, rootTodo.getParentId().getId()));
+decodeTree(rootTodo, todoSet, rootTodo.getParentId());
+}
+   
         else
             decodeTree(rootTodo, todoSet,null);
         return todoSet;
