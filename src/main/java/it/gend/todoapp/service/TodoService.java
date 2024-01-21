@@ -70,7 +70,6 @@ decodeTree(rootTodo, todoSet, rootTodo.getParentId());
         }
         if(rootTodo.getChildren().isEmpty()){
             rootTodo.setChildren(null);
-            rootTodo.setParentId(parent);
             return;
         }
         rootTodo.getChildren().forEach(todo -> {
