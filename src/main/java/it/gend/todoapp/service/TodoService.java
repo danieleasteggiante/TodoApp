@@ -43,9 +43,9 @@ public class TodoService {
         todoSet.add(rootTodo);
         List<Todo> ordered = new ArrayList<>(todoSet);
         ordered = ordered.stream()
-                .peek(todo1 -> todo1.setChildren(null))
+                .peek(t -> t.setChildren(null))
                 .sorted(Comparator.comparing(Todo::getId))
-                .peek(todo1 -> em.merge(todo1))
+                .peek(t -> em.merge(t))
                 .collect(Collectors.toList());
         em.flush();
         em.clear();
