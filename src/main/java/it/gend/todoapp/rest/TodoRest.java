@@ -13,9 +13,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
-
 import java.util.logging.Logger;
-
 @Path("/todo")
 @Produces("application/json")
 @Consumes("application/json")
@@ -29,6 +27,12 @@ public class TodoRest {
     public Response getTodoById(@PathParam("id") Integer id) {
         logger.info("Get todo by Id...");
         return Response.ok(todoService.getTodoByIdService(id)).build();
+    }
+    @GET
+    @Path("/user/{id}")
+    public Response getIdFromUserId(@PathParam("id") Integer id) {
+        logger.info("Get todo by Id User...");
+        return Response.ok(todoService.getTodoByUser(id)).build();
     }
     @GET
     @Path("/children/{id}")

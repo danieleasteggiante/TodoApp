@@ -2,9 +2,14 @@ package it.gend.todoapp.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gend.todoapp.entity.Todo;
+import it.gend.todoapp.entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,7 +28,6 @@ public class TodoService {
     EntityManager em;
     @Inject
     Logger logger;
-
     public Todo getTodoByIdService(Integer id) {
         em.clear();
         return em.find(Todo.class, id);
@@ -90,5 +94,14 @@ public class TodoService {
             logger.info(e.getMessage());
             return false;
         }
+    }
+
+    public List<Todo> getTodoByUser(Integer id) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Todo> cr = cb.createQuery(Todo.class);
+        Root<Todo> root = cr.from(Todo.class);
+        Predicate predicate = cb.equal(root.get("userId"), id);
+        cr.select(root).where(predicate);
+        return em.createQuery(cr).getResultList();
     }
 }

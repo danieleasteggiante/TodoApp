@@ -12,13 +12,11 @@ public class UserService {
     @Inject
     EntityManager em;
     public User getUserByIdService(Integer id) {
-
         return em.find(User.class, id);
     }
     public User createUserService(User user) {
         return em.merge(user);
     }
-
     public Boolean deleteUserService(Integer id) {
         try {
             em.remove(em.find(User.class, id));

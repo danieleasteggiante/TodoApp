@@ -40,6 +40,6 @@ public class UserRest {
     @Path("{id}")
     public Response deleteUser(@PathParam("id") Integer id) {
         logger.info("Delete User by id: " + id );
-        return Response.ok(userService.deleteUserService(id)).build();
+          return Response.ok(userService.deleteUserService(id)).build();
     }
 }
