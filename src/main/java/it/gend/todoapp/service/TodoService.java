@@ -41,7 +41,8 @@ public class TodoService {
             logger.info(e.getMessage());
         }
 
-        assert rootTodo != null;
+       if(rootTodo == null)
+           throw new RuntimeException("Invalid Root Todo");
 
         Set<Todo> todoSet = getListFromTree(rootTodo);
         todoSet.add(rootTodo);
